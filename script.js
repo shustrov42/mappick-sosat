@@ -31,7 +31,7 @@ const logList = document.getElementById('log-list');
 const teamANameInput = document.getElementById('teamA');
 const teamBNameInput = document.getElementById('teamB');
 const startBtn = document.getElementById('start-btn');
-const flipBtn = document.getElementById('flip-btn');
+const coinContainer = document.getElementById('coin-container');
 const coin = document.getElementById('coin');
 const coinResult = document.getElementById('coin-result');
 
@@ -47,8 +47,10 @@ document.querySelectorAll('.format-btn').forEach(btn => {
 let currentCoinRotation = 0;
 
 // Coin Flip Logic
-flipBtn.addEventListener('click', () => {
-    flipBtn.disabled = true;
+coinContainer.addEventListener('click', () => {
+    if (coinContainer.classList.contains('disabled')) return;
+    
+    coinContainer.classList.add('disabled');
     startBtn.disabled = true;
     startBtn.classList.add('disabled');
     coinResult.innerText = `Бросаем...`;
@@ -67,7 +69,6 @@ flipBtn.addEventListener('click', () => {
     let targetRotation = baseRotation + extraSpins + (winner === 1 ? 180 : 0);
     
     // Apply jump animation to container
-    const coinContainer = document.getElementById('coin-container');
     coinContainer.classList.remove('jump');
     void coinContainer.offsetWidth; // trigger reflow
     coinContainer.classList.add('jump');
@@ -85,8 +86,7 @@ flipBtn.addEventListener('click', () => {
         
         startBtn.disabled = false;
         startBtn.classList.remove('disabled');
-        flipBtn.disabled = false;
-        flipBtn.innerText = "ПЕРЕБРОСИТЬ"; // Allow flipping again if they want
+        coinContainer.classList.remove('disabled');
     }, 1500);
 });
 

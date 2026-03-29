@@ -458,10 +458,31 @@ input[type="text"]:focus {
 
 /* Desktop-specific adjustments */
 @media (max-width: 768px) {
-    .container { padding: 5px 10px; }
-    .glass-card { padding: 10px 10px; border-radius: 10px; }
+    /* Restore subtitle as requested */
+    .subtitle { display: block; letter-spacing: 4px; font-size: 0.7rem; }
+    header { margin-bottom: 15px !important; }
+
+    .container { padding: 10px 10px; }
+    .glass-card { padding: 25px 15px !important; border-radius: 15px; }
+
+    h2 { font-size: 1.2rem; margin-bottom: 20px; }
     
-    /* Hide header to save space as requested earlier */
+    .input-group { grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+    .field label { margin-bottom: 8px; font-size: 0.8rem; }
+    input[type="text"] { padding: 12px; font-size: 1rem; }
+
+    .format-selection { margin-bottom: 20px; }
+    .format-selection label { font-size: 0.8rem; }
+    .format-btn { padding: 12px; font-size: 0.9rem; }
+
+    .coin-flip-section { margin: 20px 0; padding: 15px 0; }
+    #coin-container { width: 100px; height: 100px; margin-bottom: 15px; } /* Restored coin size */
+    .side { font-size: 1.8rem; }
+    #coin-result { font-size: 0.9rem; margin-top: 15px; }
+
+    .main-cta { padding: 15px; font-size: 1rem; border-radius: 12px; }
+
+    /* Hide header on veto/result screens as requested in previous step */
     body:has(#veto-screen.active) header,
     body:has(#result-screen.active) header {
         display: none;
