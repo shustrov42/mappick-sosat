@@ -324,6 +324,11 @@ input[type="text"]:focus {
 
 .map-card:hover { transform: scale(1.03); }
 
+/* Make last action map look interactive so user knows they can undo */
+.map-card.last-action {
+    cursor: pointer !important;
+    box-shadow: 0 0 15px var(--accent-primary);
+}
 .map-bg {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -453,43 +458,48 @@ input[type="text"]:focus {
 
 /* Desktop-specific adjustments */
 @media (max-width: 768px) {
-    /* Hide header on veto and result screens to save space */
-    header { margin-bottom: 10px; }
-    #veto-screen.active ~ header, 
-    #result-screen.active ~ header,
-    .active#veto-screen ~ header,
-    .active#result-screen ~ header { 
-        display: none; 
-    }
-    
-    /* Since header is BEFORE main in HTML, we need to handle it differently if it's a sibling or use a body class */
-}
-
-/* Let's use a more robust approach for hiding header since it's above the sections */
-@media (max-width: 768px) {
     .container { padding: 5px 10px; }
     .glass-card { padding: 10px 10px; border-radius: 10px; }
     
-    /* Hide header on veto/result screens */
+    /* Hide header to save space as requested earlier */
     body:has(#veto-screen.active) header,
     body:has(#result-screen.active) header {
         display: none;
     }
 
     .turn-indicator { 
-        font-size: 1.1rem; 
+        font-size: 1.2rem; 
         margin-bottom: 8px; 
-        padding-top: 5px;
     }
     
     .maps-grid {
         grid-template-columns: 1fr;
-        gap: 5px;
+        gap: 6px;
         margin-bottom: 15px;
     }
 
     .map-card {
-        height: 65px;
+        height: 100px; /* Exactly 100px */
+    }
+
+    /* Show status label again as requested */
+    .map-status { 
+        display: block !important; 
+    }
+
+    /* Hide the veto log (history) and the footer (2026...) on mobile */
+    .veto-log, footer {
+        display: none !important;
+    }
+
+    .map-name { font-size: 1.2rem; }
+    .map-status { font-size: 0.65rem; margin-top: 2px; }
+
+    .map-card.banned::after,
+    .map-card.picked::after {
+        font-size: 1.2rem;
+        border-width: 3px;
+        padding: 3px 10px;
     }
 
     .map-name { font-size: 1.1rem; }

@@ -18,7 +18,8 @@ let state = {
     mapsLeft: [...MAPS],
     bannedMaps: [],
     pickedMaps: [],
-    history: []
+    history: [],
+    actionStack: [] // To support Undo
 };
 
 // UI Elements
@@ -111,8 +112,11 @@ function renderMaps() {
         const isBanned = state.bannedMaps.find(m => m.id === map.id);
         const isPicked = state.pickedMaps.find(m => m.id === map.id);
         
+        const lastAction = state.actionStack[state.actionStack.length - 1];
+        const isLast = lastAction && lastAction.mapId === map.id;
+        
         const card = document.createElement('div');
-        card.className = `map-card ${isBanned ? 'banned' : ''} ${isPicked ? 'picked' : ''}`;
+        card.className = `map-card ${isBanned ? 'banned' : ''} ${isPicked ? 'picked' : ''} ${isLast ? 'last-action' : ''}`;
         card.innerHTML = `
             <div class="map-bg ${map.class}"></div>
             <div class="map-info">
@@ -120,25 +124,37 @@ function renderMaps() {
             </div>
         `;
         
-        if (!isBanned && !isPicked) {
-            card.onclick = () => handleMapAction(map);
-        }
+        card.onclick = () => handleMapAction(map);
         
         mapsContainer.appendChild(card);
     });
 }
 
 function handleMapAction(map) {
+    const isBanned = state.bannedMaps.find(m => m.id === map.id);
+    const isPicked = state.pickedMaps.find(m => m.id === map.id);
+    
+    // Undo Logic: If user clicks the last performed action again
+    if (isBanned || isPicked) {
+        const lastAction = state.actionStack[state.actionStack.length - 1];
+        if (lastAction && lastAction.mapId === map.id) {
+            undoAction(map);
+            return;
+        }
+        return; // Clicked a non-last card, do nothing
+    }
+
+    // Normal Logic: BAN or PICK
     const action = getActionForCurrentStep();
     const teamName = state.currentTurn === 'A' ? state.teamA : state.teamB;
     
-    // Support either English or Russian strings depending on localization
     if (action === 'BAN' || action === 'БАН') {
         state.bannedMaps.push(map);
     } else {
         state.pickedMaps.push(map);
     }
     
+    state.actionStack.push({ mapId: map.id, action: action });
     state.mapsLeft = state.mapsLeft.filter(m => m.id !== map.id);
     addToLog(teamName, action, map.name);
     
@@ -147,11 +163,33 @@ function handleMapAction(map) {
     if (isGameOver()) {
         showResults();
     } else {
-        // Toggle turn
         state.currentTurn = state.currentTurn === 'A' ? 'B' : 'A';
         updateTurnUI();
         renderMaps();
     }
+}
+
+function undoAction(map) {
+    const lastAction = state.actionStack.pop();
+    if (!lastAction) return;
+
+    // Revert state
+    if (lastAction.action === 'BAN') {
+        state.bannedMaps = state.bannedMaps.filter(m => m.id !== map.id);
+    } else {
+        state.pickedMaps = state.pickedMaps.filter(m => m.id !== map.id);
+    }
+    
+    state.mapsLeft.push(map);
+    state.currentStep--;
+    state.currentTurn = state.currentTurn === 'A' ? 'B' : 'A'; // Go back
+    
+    // UI Cleanup
+    state.history.pop();
+    logList.removeChild(logList.firstChild); // Remove top entry from UI log list
+    
+    updateTurnUI();
+    renderMaps();
 }
 
 function getActionForCurrentStep() {
