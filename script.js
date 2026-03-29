@@ -46,8 +46,8 @@ document.querySelectorAll('.format-btn').forEach(btn => {
 
 let currentCoinRotation = 0;
 
-// Coin Flip Logic
-coinContainer.addEventListener('click', () => {
+// Function to execute coin flip
+function startCoinFlip() {
     if (coinContainer.classList.contains('disabled')) return;
     
     coinContainer.classList.add('disabled');
@@ -56,24 +56,18 @@ coinContainer.addEventListener('click', () => {
     coinResult.innerText = `Бросаем...`;
     coinResult.style.color = 'var(--text-muted)';
     
-    // Better randomness using crypto API
     const randomBuffer = new Uint32Array(1);
     const randomNum = window.crypto ? window.crypto.getRandomValues(randomBuffer)[0] / 4294967296 : Math.random();
-    const winner = randomNum < 0.5 ? 0 : 1; // 0 = Team A, 1 = Team B
+    const winner = randomNum < 0.5 ? 0 : 1;
     
-    // We want at least 4 full spins (1440 deg) from the base
     const extraSpins = 4 * 360; 
     let baseRotation = currentCoinRotation - (currentCoinRotation % 360);
-    
-    // If winner is B (1), we add 180 to land on Tails, otherwise 0 for Heads
     let targetRotation = baseRotation + extraSpins + (winner === 1 ? 180 : 0);
     
-    // Apply jump animation to container
     coinContainer.classList.remove('jump');
-    void coinContainer.offsetWidth; // trigger reflow
+    void coinContainer.offsetWidth;
     coinContainer.classList.add('jump');
     
-    // Apply spin to coin
     coin.style.transition = 'transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     coin.style.transform = `rotateY(${targetRotation}deg)`;
     currentCoinRotation = targetRotation;
@@ -88,7 +82,21 @@ coinContainer.addEventListener('click', () => {
         startBtn.classList.remove('disabled');
         coinContainer.classList.remove('disabled');
     }, 1500);
+}
+
+// Bind both click and touch for maximum compatibility
+coinContainer.addEventListener('click', (e) => {
+    e.preventDefault();
+    startCoinFlip();
 });
+
+coinContainer.addEventListener('touchstart', (e) => {
+    // Only trigger if not already busy, and prevent the following 'click' event
+    if (!coinContainer.classList.contains('disabled')) {
+        e.preventDefault();
+        startCoinFlip();
+    }
+}, { passive: false });
 
 startBtn.addEventListener('click', () => {
     state.teamA = teamANameInput.value || 'ВЕРХНЯЯ';
