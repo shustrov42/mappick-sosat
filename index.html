@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Map Veto | Professional Veto System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="glitch-text" data-text="CS2 VETO SYSTEM">CS2 VETO SYSTEM</h1>
+            <p class="subtitle">ТУРНИРНЫЙ РЕЖИМ (PREMIER)</p>
+        </header>
+
+        <!-- Step 1: Configuration -->
+        <section id="setup-screen" class="active">
+            <div class="glass-card">
+                <h2>Настройка матча</h2>
+                <div class="input-group">
+                    <div class="field">
+                        <label>Верхняя команда</label>
+                        <input type="text" id="teamA" placeholder="TEAM ALPHA" value="ВЕРХНЯЯ">
+                    </div>
+                    <div class="field">
+                        <label>Нижняя команда</label>
+                        <input type="text" id="teamB" placeholder="TEAM BETA" value="НИЖНЯЯ">
+                    </div>
+                </div>
+
+                <div class="format-selection">
+                    <label>Формат матча</label>
+                    <div class="radio-group">
+                        <button class="format-btn selected" data-format="BO1">BEST OF 1</button>
+                        <button class="format-btn" data-format="BO3">BEST OF 3</button>
+                    </div>
+                </div>
+
+                <div class="coin-flip-section">
+                    <div id="coin-container">
+                        <div id="coin">
+                            <div class="side heads">В</div>
+                            <div class="side tails">Н</div>
+                        </div>
+                    </div>
+                    <button id="flip-btn" class="primary-btn">БРОСИТЬ МОНЕТКУ</button>
+                    <p id="coin-result" class="status-msg">Бросьте, чтобы решить кто начнет</p>
+                </div>
+
+                <button id="start-btn" class="main-cta disabled" disabled>НАЧАТЬ ВЕТО</button>
+            </div>
+        </section>
+
+        <!-- Step 2: Veto Process -->
+        <section id="veto-screen">
+            <div class="turn-indicator">
+                <span id="current-turn-team">TEAM A</span>, ваш <span id="current-action">BAN</span>
+            </div>
+
+            <div class="maps-grid" id="maps-container">
+                <!-- Maps will be injected by JavaScript -->
+            </div>
+
+            <div class="veto-log">
+                <h3>История (Log)</h3>
+                <ul id="log-list"></ul>
+            </div>
+        </section>
+
+        <!-- Step 3: Result -->
+        <section id="result-screen">
+            <div class="glass-card winner-card">
+                <h2 id="final-map-title">MAP SELECTED</h2>
+                <div id="final-maps-display" class="final-grid"></div>
+                <button id="restart-btn" class="secondary-btn">НОВОЕ ВЕТО</button>
+                <button id="copy-btn" class="primary-btn">СКОПИРОВАТЬ РЕЗУЛЬТАТ</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CS2 Veto Utility | Designed for Pro Play</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
