@@ -376,6 +376,14 @@ input[type="text"]:focus {
     text-transform: uppercase;
 }
 
+@media (max-width: 768px) {
+    .map-card.banned::after {
+        font-size: 1.2rem;
+        border-width: 4px;
+        padding: 5px 10px;
+    }
+}
+
 .map-card.picked { border-color: var(--picked-green); }
 .map-card.picked .map-bg { filter: brightness(1); }
 .map-card.picked::after {
@@ -386,6 +394,14 @@ input[type="text"]:focus {
     border: 8px solid var(--picked-green);
     padding: 10px 20px; opacity: 0.8; z-index: 5;
     text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .map-card.picked::after {
+        font-size: 1.2rem;
+        border-width: 4px;
+        padding: 5px 10px;
+    }
 }
 
 /* Veto Log */
@@ -437,20 +453,66 @@ input[type="text"]:focus {
 
 /* Desktop-specific adjustments */
 @media (max-width: 768px) {
-    .input-group { grid-template-columns: 1fr; }
-    .glitch-text { font-size: 2rem; }
+    /* Hide header on veto and result screens to save space */
+    header { margin-bottom: 10px; }
+    #veto-screen.active ~ header, 
+    #result-screen.active ~ header,
+    .active#veto-screen ~ header,
+    .active#result-screen ~ header { 
+        display: none; 
+    }
+    
+    /* Since header is BEFORE main in HTML, we need to handle it differently if it's a sibling or use a body class */
+}
+
+/* Let's use a more robust approach for hiding header since it's above the sections */
+@media (max-width: 768px) {
+    .container { padding: 5px 10px; }
+    .glass-card { padding: 10px 10px; border-radius: 10px; }
+    
+    /* Hide header on veto/result screens */
+    body:has(#veto-screen.active) header,
+    body:has(#result-screen.active) header {
+        display: none;
+    }
+
+    .turn-indicator { 
+        font-size: 1.1rem; 
+        margin-bottom: 8px; 
+        padding-top: 5px;
+    }
+    
+    .maps-grid {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    .map-card {
+        height: 65px;
+    }
+
+    .map-name { font-size: 1.1rem; }
+    .map-status { font-size: 0.6rem; margin-top: 2px; }
+
+    .map-card.banned::after,
+    .map-card.picked::after {
+        font-size: 1rem;
+        border-width: 3px;
+        padding: 2px 8px;
+    }
     
     .final-grid .final-card {
         width: 100%;
         max-width: 320px;
-        height: 140px;
+        height: 100px;
     }
     
     .winner-card .primary-btn, 
     .winner-card .secondary-btn {
         display: block;
         width: 100%;
-        margin: 15px 0;
+        margin: 10px 0;
     }
 }
 
