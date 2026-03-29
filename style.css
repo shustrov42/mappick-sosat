@@ -170,6 +170,8 @@ input[type="text"]:focus {
     height: 100px;
     margin: 0 auto 20px;
     perspective: 1000px;
+    cursor: pointer;
+    touch-action: manipulation; /* Optimizes for touch devices */
 }
 
 #coin {
@@ -177,7 +179,8 @@ input[type="text"]:focus {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    /* transition is applied in JS */
+    pointer-events: none; /* Let clicks pass to the container */
+    user-select: none;
 }
 
 .side {
